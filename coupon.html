@@ -283,6 +283,8 @@
       var html = '<div class="coupon-type-wrap">';
       html += '<div class="coupon-type-label">PREMIUM OFFER</div>';
       var typeDisplay = couponData.couponType;
+      // リテラル \n（バックスラッシュ+n）を本物の改行文字に変換
+      if (typeDisplay) typeDisplay = String(typeDisplay).replace(/\\n/g, '\n');
       if (typeDisplay && typeDisplay.indexOf('選択式') >= 0) {
         html += '<div class="coupon-type" style="text-align:center;">選択式</div>';
         html += '<div style="font-size:22px;font-weight:700;color:#f9d976;text-align:center;margin-top:8px;line-height:1.6;">';
