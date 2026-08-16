@@ -334,7 +334,9 @@
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
-          action: COUPON_TYPE_PARAM === 'manual' ? 'markManualCouponUsed' : 'markCouponUsed',
+          action: COUPON_TYPE_PARAM === 'birthday' ? 'markBirthdayCouponUsed'
+                : COUPON_TYPE_PARAM === 'manual'   ? 'markManualCouponUsed'
+                :                                    'markCouponUsed',
           couponId: COUPON_ID,
           choice: selectedChoice
         })
