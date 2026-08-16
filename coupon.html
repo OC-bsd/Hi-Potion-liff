@@ -286,7 +286,8 @@
         html += '<div style="font-size:22px;font-weight:700;color:#f9d976;text-align:center;margin-top:8px;line-height:1.6;">';
         html += '本指名無料<br><span style="font-size:16px;color:#d4af37;">or</span><br>60分3900円</div>';
       } else {
-        html += '<div class="coupon-type">' + escapeHtml(typeDisplay) + '</div>';
+        var fs = _pickCouponTypeFontSize(typeDisplay);
+        html += '<div class="coupon-type" style="font-size:' + fs + 'px;">' + escapeHtml(typeDisplay) + '</div>';
       }
       html += '</div>';
       html += '<div class="coupon-id">ID: ' + escapeHtml(couponData.couponId) + '</div>';
@@ -371,6 +372,35 @@
       return String(s || '').replace(/[&<>"']/g, function(c){
         return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
       });
+    }
+
+    /**
+     * couponType の文字量から font-size(px) を自動決定
+     * 全角=2, 半角=1 で幅計算 → 最長行 or 全長/3 の大きい方を基準に段階選択
+     */
+    function _pickCouponTypeFontSize(text) {
+      var t = String(text || '').trim();
+      if (!t) return 32;
+      var lines = t.split(/\r?\n/);
+      function w(s) {
+        var n = 0;
+        for (var i = 0; i < s.length; i++) n += (s.charCodeAt(i) > 0x7F) ? 2 : 1;
+        return n;
+      }
+      var maxLine = 0, total = 0;
+      for (var i = 0; i < lines.length; i++) {
+        var lw = w(lines[i]);
+        if (lw > maxLine) maxLine = lw;
+        total += lw;
+      }
+      var eff = Math.max(maxLine, Math.ceil(total / 3));
+      if (eff <= 10) return 34;
+      if (eff <= 14) return 30;
+      if (eff <= 20) return 26;
+      if (eff <= 28) return 22;
+      if (eff <= 36) return 19;
+      if (eff <= 50) return 16;
+      return 14;
     }
 
     // 起動
